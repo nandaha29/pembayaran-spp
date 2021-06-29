@@ -1,0 +1,81 @@
+Step By Step Library Sequelize  
+
+- siapkan folder project "spp_ukk"
+
+- inisiasi npm -> $ npm init --y
+
+- install "nodemon" --> $ npm install nodemon
+
+- buat folder "router" dan file dengan nama "server.js"
+
+- config nodemon --> di file package.json
+	+ "start": "nodemon server.js" (dalam script)
+
+menginstall library "sequelize"
+
+- install global sequelize-cli -> $ npm install -g sequelize-cli
+
+- install sequelize, mysql2, express, multer (lokal) -> $ npm install sequelize mysql2 express multer
+
+- install jsonwebtoken tuk proses auth -> $ npm install jsonwebtoken
+
+- install library MD5 tuk (hashing) tuk password spy aman -> npm install md5
+
+- inisiasi sequelize -> $ sequelize init
+
+- buat database "spp_ukk" di PhpMyAdmin
+
+- set configurasi database -> config\config.js
+	+ "database": "spp_ukk",
+
+- kita buat migration "siswa" -> $ sequelize model:create --name siswa --attributes nisn:integer,nis:integer,nama:string,id_kelas:integer,alamat:string,no_telp:integer,id_spp:integer,image:string
+
+- kita buat migration "kelas" -> $ sequelize model:create --name kelas --attributes id_kelas:integer,nama_kelas:string,kompetensi_keahlian:string
+
+- kita buat migration "spp" -> $ sequelize model:create --name spp --attributes id_spp:integer,tahun:string,nominal:float
+
+- kita buat migration "pembayaran" -> $ sequelize model:create --name pembayaran --attributes id_pembayaran:integer,id_petugas:integer,tgl_bayar:date,bulan_bayar:string,id_tagihan:integer,jumlah_bayar:double,image:string,status:boolean
+
+- kita buat migration "petugas" -> $ sequelize model:create --name petugas --attributes id_petugas:integer,username:string,password:string,nama_petugas:string,level:string,image:string
+
+- kita buat migration "level" -> $ sequelize model:create --name level --attributes id_level:integer,nama_level:string
+
+- kita buat migration "tagihan" -> $ sequelize model:create --name tagihan --attributes id_tagihan:integer,nisn:integer,bulan:string,tahun:string,jumlah_spp:float
+
+- perbaiki nama table, primary key, dan script relasinya pada file folder "migrations"
+
+- kita eksekusi migrate untuk create struktur tabel -> $ sequelize db:migrate
+
+- jika mengalami error "can't create tabel 'perpustakaan' 'spp' (errno: 150 "foreign key constrait is incorectly formed")" -> rename file mulai spp,kelas,siswa,petugas,pembayaran dgn ditambahi nomer urut didepanny
+
+- jika mau undo -> $ sequelize db:migrate:undo:all
+
+- jika mengalami error "mysql2 install manuall" run command -> $ npm install -g mysql2 
+
+- buat script relation pada file folder "models"
+
+- lanjutkan dengan menyusun endpoint di file folder "router" juga buat file per table
+
+- untuk menjalankan program ketik -> $ npm start 
+
+- lakukan CRUD pada setiap Endpoint di setiap file memakai "postman"
+
+- lakukan pengisian dengan urutan -> spp,kelas,petugas,level,siswa,pembayaran (yg di sequelize dari yg parent baru yg child atau yg dari relasinya 1 dulu baru yg banyak relasinya)
+
+- jika berhasil selamat 
+
+nb: 
+sequalize = sebuah library,  
+migratory = folder membuat struktur tabel (DDL -Data Definition Language) 
+models = folder tempat mengganti query (DML -Data Manupulation Language), 
+router = folder untuk tempat setting endpoint per tabel
+
+
+// ini adalah blok untuk menghubungkan antar model/table
+/** one to one -> hasOne(), belongsTo()
+  *  one to many-> hasMany(), belongsToMany()
+  * 
+  * has -> itu dipakai ketika menghubungkan parent ke child
+  * belong -> itu dipakai ketika menghubungkan child ke parent
+*/
+// image bisa dibuatkan tabel sendiri,jumlah_bayar blm otomatis =>  //  total = bulan januari(bulan_dibayar) - agustus(bulan belum dibayar) + 25000(denda)
